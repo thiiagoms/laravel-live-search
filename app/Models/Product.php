@@ -7,10 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
+    use HasFactory;
 
+    /**
+     * Use table timestamps
+     *
+     * @var boolean
+     */
     public $timestamps = false;
-
-    protected $table = 'products';
 
     protected $fillable = ['name', 'category', 'price'];
 }

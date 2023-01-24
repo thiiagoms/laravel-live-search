@@ -1,0 +1,45 @@
+version: '3.7'
+services:
+    app:
+        build:
+            args:
+                user: ${USER}
+                uid: 1000
+            context: ./
+            dockerfile: ./docker/php/Dockerfile
+        image: livesearch
+        container_name: livesearch-app
+        restart: unless-stopped
+        working_dir: /var/www/
+        volumes:
+            - ./:/var/www
+        networks:
+            - livesearch
+    db:
+        image: mysql:5.7
+        container_name: livesearch-db
+        restart: unless-stopped
+        environment:
+            MYSQL_DATABASE: livesearch
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_PASSWORD: root
+            SERVICE_TAGS: dev
+            SERVICE_NAME: mysql
+        volumes:
+            - ./docker/mysql:/docker-entrypoint-initdb.d
+        networks:
+            - livesearch
+    nginx:
+        image: nginx:alpine
+        container_name: livesearch-nginx
+        restart: unless-stopped
+        ports:
+            - 8000:80
+        volumes:
+            - ./:/var/www/
+            - ./docker/nginx:/etc/nginx/conf.d/
+        networks:
+            - livesearch
+networks:
+    livesearch:
+        driver: bridge

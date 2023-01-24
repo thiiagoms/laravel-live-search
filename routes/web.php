@@ -13,15 +13,11 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-Route::get('/', function () {
-    return view('welcome');
-});
-
-
-Route::controller(ProductController::class)->name('product.')->group(function () {
-
-    Route::get('', 'index')->name('index');
-    Route::post('search', 'search')->name('search');
-    Route::post('create', 'store')->name('create');
-});
+Route::controller(ProductController::class)
+    ->name('product.')->group(function () {
+        Route::get('', 'index')->name('index');
+        Route::post('search', 'search')->name('search');
+        Route::post('create', 'store')->name('create');
+        Route::put('update/{id}', 'edit')->name('edit');
+        Route::delete('delete/{id}', 'delete')->name('delete');
+    });

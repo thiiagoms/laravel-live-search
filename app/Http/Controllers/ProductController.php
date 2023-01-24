@@ -5,24 +5,22 @@ namespace App\Http\Controllers;
 use App\Services\ProductService;
 use Illuminate\Http\Request;
 
-class ProductController extends Controller
+/**
+ * Product Controller package
+ *
+ * @package App\Http\Controllers
+ * @author  Thiago Silva <thiagom.devsec@gmail.com>
+ * @version 1.0
+ */
+final class ProductController extends Controller
 {
-
-    /**
-     * Product service
-     *
-     * @var ProductService
-     */
-    private ProductService $productService;
-
     /**
      * Init controller with service
      *
      * @param ProductService $productService
      */
-    public function __construct(ProductService $productService)
+    public function __construct(private ProductService $productService)
     {
-        $this->productService = $productService;
     }
 
     /**
@@ -34,7 +32,7 @@ class ProductController extends Controller
     {
         return view('products.index', ['products' => $this->productService->allProducts()]);
     }
-    
+
     /**
      * Store a newly created resource in storage.
      *
@@ -43,14 +41,13 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        
-        $this->productService->createNewProduct([
-            'name' => $request->productName,
-            'price' => $request->productPrice,
+        $this->productService->createProduct([
+            'name'     => $request->productName,
+            'price'    => $request->productPrice,
             'category' => $request->productCategory
         ]);
-        
-        return view('products.index');
+
+        return to_route('product.index');
     }
 
     /**
@@ -66,5 +63,29 @@ class ProductController extends Controller
         $productResult = $this->productService->searchProduct($productData);
 
         return response()->json(['products' => $productResult]);
+    }
+
+    public function edit(int $id)
+    {
+        // TODO
+    }
+
+    /**
+     * Delete product
+     *
+     * @param integer $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function delete(int $id): \Illuminate\Http\RedirectResponse
+    {
+        $producId = filter_var($id, FILTER_VALIDATE_INT);
+
+        if (!$producId) {
+            return to_route('product.index', ['error' => 'Invalid id']);
+        }
+
+        $result = $this->productService->deleteProduct($producId);
+
+        return to_route('product.index')->with(array_key_first($result), array_values($result)[0]);
     }
 }
