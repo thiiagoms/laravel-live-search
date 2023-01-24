@@ -1,27 +1,19 @@
-@extends('template')
-
-@section('title')
-    Products - Live Search
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-@endsection
-
-@section('content')
+<x-layout title="Live Search - Products">
     <div class="container mt-4">
         <div class="jumbotron">
             <h1 class="display-4">Product List</h1>
             <p class="lead">Laravel - Live Search</p>
             <hr class="my-4">
-            <p>Simple live search with laravel</p>
+            <p>Live Search With Laravel</p>
             <p class="lead">
                 <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#addNewProduct">
-                    Add Procut
+                    Add Product
                 </button>
             </p>
         </div>
-        
 
-        <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="addNewProduct"
-            aria-hidden="true" id="addNewProduct">
+        <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="addNewProduct" aria-hidden="true"
+            id="addNewProduct">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -61,7 +53,7 @@
             @csrf
             <div class="form-row">
                 <div class="col-11">
-                    <label class="sr-only" for="inlineFormInput">Product name</label>
+                    <label class="sr-only" for="productData">Product Name</label>
                     <input type="text" class="form-control mb-2" id="productData" name="productData"
                         placeholder="Search by product name or category">
                 </div>
@@ -74,54 +66,34 @@
                     <th scope="col">Name</th>
                     <th scope="col">Category</th>
                     <th scope="col">Price</th>
+                    <th scope="col">Action</th>
                 </tr>
             </thead>
             <tbody>
+                @foreach ($products as $product)
+                    <tr>
+                        <td>{{ $product->name }}</td>
+                        <td>{{ $product->category }}</td>
+                        <td>{{ $product->price }}</td>
+                        <td>
+                            <span class="d-flex">
+                                <a href="{{ route('product.edit', ['id' => $product->id]) }}"
+                                    class="btn btn-primary btn-sm mr-1">
+                                    <i class="fas fa-pencil"></i>
+                                </a>
+                                <form action="{{ route('product.delete', ['id' => $product->id]) }}" method="POST">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button class="btn btn-danger btn-sm">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </form>
+                            </span>
+                        </td>
+                    </tr>
+                @endforeach
             </tbody>
         </table>
+        {{ $products->links() }}
     </div>
-
-    @section('scripts')
-        <script>
-            function appendDataTable(data) {
-                let htmlView = '';
-
-                if (data.products == null) {
-                    htmlView += `
-                        <tr>
-                            <td>Data not found</td>
-                            <td>Data not found</td>
-                            <td>Data not found</td>
-                        </tr>`;
-                    return $('tbody').html(htmlView);
-                }
-
-                for (let i = 0; i < data.products.length; i++) {
-                    htmlView += `
-                        <tr>
-                            <td>`+ data.products[i].name + `</td>
-                            <td>`+ data.products[i].category +`</td>
-                            <td>`+ data.products[i].price +`</td>
-                        </tr>`;
-                }
-
-                $('tbody').html(htmlView);
-            }
-
-            $('#productData').on('keyup', function() {
-                let productData = $(this).val();
-                $.post('{{ route("product.search") }}',
-                    {
-                        "_token": "{{ csrf_token() }}",
-                        productData: productData
-                    },
-                    function (data) {
-                        appendDataTable(data);
-                    }
-                );
-            });
-            
-        </script>
-    @endsection
-
-@endsection
+</x-layout>
