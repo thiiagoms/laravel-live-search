@@ -1,9 +1,4 @@
-<style>
-    .center {
-        text-align: center;
-    }
-</style>
-<div class="center">
+<div align="center">
     <p>
         <a href="https://github.com/thiiagoms/laravel-live-search">
           <img src="assets/img/search.png" alt="Logo" width="80" height="80">
