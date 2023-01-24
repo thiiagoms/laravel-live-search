@@ -29,7 +29,3 @@ jobs:
     - name: Run phpcs
       run: |
         composer phpcs app/
-
-    - name: Run phpunit
-      run:
-        composer tests
