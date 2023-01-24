@@ -1,43 +1,60 @@
-Simple live search with laravel
+<style>
+    .center {
+        text-align: center;
+    }
+</style>
+<div class="center">
+    <p>
+        <a href="https://github.com/thiiagoms/laravel-live-search">
+          <img src="assets/img/search.png" alt="Logo" width="80" height="80">
+        </a>
+        <h3 align="center">Live Search with Laravel and JQuery</h3>
+    </p>
+    <br>
+    <p float="left">
+        <img src="https://img.shields.io/badge/jquery-%230769AD.svg?style=for-the-badge&logo=jquery&logoColor=white"
+            alt="jquery" width="100">
+        <img src="https://img.shields.io/badge/laravel-%23FF2D20.svg?style=for-the-badge&logo=laravel&logoColor=white"
+            alt="laravel" width="100">
+        <img src="https://img.shields.io/badge/shell_script-%23121011.svg?style=for-the-badge&logo=gnu-bash&logoColor=white"
+            alt="shell_script" width="100">
+        <img src="https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white"
+            alt="docker" width="100">
+    </p>
+</div>
 
 - [Dependencies](#Dependencies)
-- [Run](#Run)
+- [Install](#Install)
 
 ### Dependencies
+= Docker
 
-- PHP 80+
-- Composer
-- MySQL
-### Installation
+### Install
 
-1 -) Clone
+01 - Clone this repository:
 ```bash
 $ git clone https://github.com/thiiagoms/laravel-live-search
 ```
 
-2 -) Configure
+02 - Change to this repository:
 ```bash
 $ cd laravel-live-search
-$ cp .env.example .env
-$ Add your MySQL credentials to `.env`
-
-DB_CONNECTION=mysql
-DB_HOST=[DATABASE-HOST]
-DB_PORT=[DATABASE-PORT]
-DB_DATABASE=[DATABASE-NAME]
-DB_USERNAME=[DATABASE-USERNAME]
-DB_PASSWORD=[DATABASE-PASSWORD]
+laravel-live-search $
 ```
 
-3-) Install:
+03 - Execute `setup.sh`:
 ```bash
-$ composer install
-$ php artisan key:generate
-$ php artisan db:migrate
-$ php artisan db:seed
+laravel-live-search $ chmod +x setup.sh
+laravel-live-search $ ./setup.sh
+
+██      ██ ██    ██ ███████     ███████ ███████  █████  ██████   ██████ ██   ██
+██      ██ ██    ██ ██          ██      ██      ██   ██ ██   ██ ██      ██   ██
+██      ██ ██    ██ █████       ███████ █████   ███████ ██████  ██      ███████
+██      ██  ██  ██  ██               ██ ██      ██   ██ ██   ██ ██      ██   ██
+███████ ██   ████   ███████     ███████ ███████ ██   ██ ██   ██  ██████ ██   ██
+
+    [*] Author: Thiago Silva AKA thiiagoms
+    [*] E-mail: thiagom.devsec@gmail.com
 ```
 
-4-) Run:
-```bash
-$ php artisan serve
-```
+04 - Go to `http://localhost:8000`
