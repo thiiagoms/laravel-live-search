@@ -4,43 +4,44 @@ declare(strict_types=1);
 
 namespace App\Repositories;
 
+use App\Contracts\ProductContract;
 use App\Models\Product;
 
 /**
- * Product repository
- * 
+ * Product Repository
+ *
  * @package App\Repositories
  * @author  Thiago Silva <thiagom.devsec@gmail.com>
- * @version 1.0-
+ * @version 1.0
  */
-class ProductRepository
+class ProductRepository extends Repository implements ProductContract
 {
-
     /**
-     * Product model
+     * Model injection
      *
-     * @var Product
+     * @var object
      */
-    private Product $product;
-
-    /**
-     * Init repository with model
-     *
-     * @param Product $product
-     */
-    public function __construct(Product $product)
-    {
-        $this->product = $product;
-    }
+    protected $model = Product::class;
 
     /**
      * Return all products
      *
      * @return object
      */
-    public function allProducts(): object
+    public function productList(): object
     {
-        return $this->product->simplePaginate(5);
+        return $this->model->simplePaginate(5);
+    }
+
+    /**
+     * Return if product exists or null instead
+     *
+     * @param integer $productId
+     * @return object|null
+     */
+    public function productFind(int $productId): object|null
+    {
+        return $this->model->find($productId);
     }
 
     /**
@@ -49,9 +50,9 @@ class ProductRepository
      * @param array $data
      * @return void
      */
-    public function storeNewProduct(array $data): void
+    public function productCreate(array $data): void
     {
-        $this->product->create($data);
+        $this->model->create($data);
     }
 
     /**
@@ -60,10 +61,21 @@ class ProductRepository
      * @param string $productData
      * @return object
      */
-    public function searchProductData(string $productData): object
+    public function productSearch(string $productData): object
     {
-        return $this->product->where('name', 'like',  "%{$productData}%")
+        return $this->model->where('name', 'like', "%{$productData}%")
             ->orWhere('category', 'like', "%{$productData}%")
             ->get();
+    }
+
+    /**
+     * Delete product
+     *
+     * @param integer $productId
+     * @return integer
+     */
+    public function productDelete(int $productId): int
+    {
+        return $this->model->destroy($productId);
     }
 }

@@ -4,33 +4,24 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Repositories\ProductRepository;
+use App\Contracts\ProductContract;
 
 /**
  * Product service
- * 
+ *
  * @package App\Repositories
  * @author  Thiago Silva <thiagom.devsec@gmail.com>
  * @version 1.0
  */
-class ProductService
+final class ProductService
 {
-
-    /**
-     * Product repository
-     *
-     * @var ProductRepository
-     */
-    private ProductRepository $productRepo;
-
     /**
      * Init service with repository
      *
-     * @param ProductRepository $productRepository
+     * @param ProductContract $productContract
      */
-    public function __construct(ProductRepository $productRepository)
+    public function __construct(private ProductContract $productContract)
     {
-        $this->productRepo = $productRepository;
     }
 
     /**
@@ -40,7 +31,7 @@ class ProductService
      */
     public function allProducts(): object
     {
-        return $this->productRepo->allProducts();
+        return $this->productContract->productList();
     }
 
     /**
@@ -49,23 +40,44 @@ class ProductService
      * @param array $data
      * @return void
      */
-    public function createNewProduct(array $data): void
+    public function createProduct(array $data): void
     {
-        $this->productRepo->storeNewProduct($data);
+        $this->productContract->productCreate($data);
     }
 
     /**
      * Search product
      *
      * @param string $productData
-     * @return void
+     * @return object|null
      */
-    public function searchProduct(string $productData)
+    public function searchProduct(string $productData): object|null
     {
-        $productResult = $this->productRepo->searchProductData($productData);
+        $productResult = $this->productContract->productSearch($productData);
 
         return $productResult->isEmpty()
             ? null
             : $productResult;
+    }
+
+    /**
+     * Delete product
+     *
+     * @param integer $productId
+     * @return array
+     */
+    public function deleteProduct(int $productId): array
+    {
+        $product = $this->productContract->productFind($productId);
+
+        if (is_null($product)) {
+            return ['error' => "Product not found"];
+        }
+
+        $result = $this->productContract->productDelete($productId);
+
+        return is_integer($result)
+            ? ['success' => "Product {$product->name} deleted"]
+            : ['error'  => "Product "];
     }
 }
